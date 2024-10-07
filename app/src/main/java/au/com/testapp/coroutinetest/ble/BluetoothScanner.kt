@@ -95,18 +95,37 @@ class BluetoothScanner private constructor(context: Context) {
     }
 
     @SuppressLint("MissingPermission")
-    fun startScanningBad() {
+    fun startScanningWithSameCallback() {
         if (bluetoothLeScanner != null) {
-            Timber.d("Starting BLE scan - stupidly")
-            bluetoothLeScanner?.startScan(scanCallback)
+            Timber.d("Starting BLE scan - same scan call back")
+
+            if (bluetoothLeScanner != null) {
+                Timber.d("Starting BLE scan - with same scan callback")
+                bluetoothLeScanner?.startScan(scanCallback)
+            }
         }
     }
 
     @SuppressLint("MissingPermission")
-    fun stopScanningBad() {
+    fun stopScanningSameScanCallback() {
         if (bluetoothLeScanner != null) {
-            Timber.d("Stopping BLE scan - stupidly")
+            Timber.d("Stopping BLE scan - with same scan callback")
             bluetoothLeScanner?.stopScan(scanCallback)
+        }
+    }
+
+
+    @SuppressLint("MissingPermission")
+    fun startScanningBad() {
+        if (bluetoothLeScanner != null) {
+            Timber.d("Starting BLE scan - stupidly")
+            bluetoothLeScanner?.startScan(object : ScanCallback() {
+                @SuppressLint("MissingPermission")
+                override fun onScanResult(callbackType: Int, result: ScanResult) {
+                    super.onScanResult(callbackType, result)
+                    Timber.d("Stupid scan Device found: ${result.device.name} - ${result.device.address}")
+                }
+            })
         }
     }
 }

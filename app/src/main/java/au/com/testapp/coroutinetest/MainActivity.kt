@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
@@ -33,7 +35,9 @@ class MainActivity : ComponentActivity() {
                     Column(
                         Modifier
                             .fillMaxSize()
-                            .padding(5.dp),
+                            .verticalScroll(rememberScrollState())
+                            .padding(5.dp, 5.dp, 5.dp, 40.dp),
+
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Greeting(
@@ -73,23 +77,39 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
+                        //Scan with same call back
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(5.dp)
                         ) {
 
-                            Text("Use these buttons to cause a problem with the allowed number of BLE scan callbacks. No checks, no safety.")
+                            Text("Start / Stop scan using the same scan callback")
+                            Button(onClick = {
+                                bluetoothScanner.startScanningWithSameCallback()
+                            }, modifier = Modifier.fillMaxWidth()) {
+                                Text("Start BLE Scanning")
+                            }
+
+                            Button(onClick = {
+                                bluetoothScanner.stopScanningSameScanCallback()
+                            }, modifier = Modifier.fillMaxWidth()) {
+                                Text("Stop BLE Scanning")
+                            }
+                        }
+
+                        //Scan with new call back everytime
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(5.dp)
+                        ) {
+
+                            Text("Use this to start scanning with a new call back everytime")
                             Button(onClick = {
                                 bluetoothScanner.startScanningBad()
                             }, modifier = Modifier.fillMaxWidth()) {
                                 Text("Start BLE Scanning (Bad)")
-                            }
-
-                            Button(onClick = {
-                                bluetoothScanner.stopScanningBad()
-                            }, modifier = Modifier.fillMaxWidth()) {
-                                Text("Stop BLE Scanning (Bad)")
                             }
                         }
                     }
